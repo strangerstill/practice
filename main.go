@@ -37,15 +37,14 @@ func (r *IdReserver) reserveGlobal() {
 }
 
 func (r *IdReserver) getNotificationId(userId int) int {
-	if value, ok := r.data[userId]; ok {
-		if r.globalId > value {
-			return r.globalId
-		} else {
-			return value
-		}
-	} else {
+	value, ok := r.data[userId]
+	if !ok {
 		return r.globalId
 	}
+	if r.globalId > value {
+		return r.globalId
+	}
+	return value
 }
 
 func main() {
