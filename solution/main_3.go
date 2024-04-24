@@ -18,33 +18,12 @@ func NewIdReserver() *IdReserver {
 	}
 }
 
-func (r *IdReserver) sendNotification(userId int) {
+func (n *IdReserver) sendNotification(userId int) {
+	n.localId += 1
 	if userId == 0 {
-		r.reserveGlobal()
+		n.globalId = n.localId
 	} else {
-		r.reserveUser(userId)
-	}
-}
-
-func (r *IdReserver) reserveUser(userId int) {
-	r.localId += 1
-	r.data[userId] = r.localId
-}
-
-func (r *IdReserver) reserveGlobal() {
-	r.localId += 1
-	r.globalId = r.localId
-}
-
-func (r *IdReserver) getNotificationId(userId int) int {
-	if value, ok := r.data[userId]; ok {
-		if r.globalId > value {
-			return r.globalId
-		} else {
-			return value
-		}
-	} else {
-		return r.globalId
+		n.data[userId] = n.localId
 	}
 }
 
@@ -67,7 +46,15 @@ func main() {
 		if requestType == 1 {
 			notification.sendNotification(userId)
 		} else if requestType == 2 {
-			fmt.Fprintln(out, notification.getNotificationId(userId))
+			if value, ok := notification.data[userId]; ok {
+				if notification.globalId > value {
+					fmt.Fprintln(out, notification.globalId)
+				} else {
+					fmt.Fprintln(out, value)
+				}
+			} else {
+				fmt.Fprintln(out, notification.globalId)
+			}
 		}
 	}
 }
