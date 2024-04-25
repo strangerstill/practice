@@ -42,10 +42,10 @@ func main() {
 			var time int
 			fmt.Fscan(in, &time)
 			data = append(data, Data{userTime: time, userNumber: j})
-			sort.Slice(data, func(i, j int) bool {
-				return data[i].userTime < data[j].userTime
-			})
 		}
+		sort.Slice(data, func(i, j int) bool {
+			return data[i].userTime < data[j].userTime
+		})
 		sameWinCount := 0
 		win := 1
 		var result []ResultData
